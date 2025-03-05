@@ -5,6 +5,8 @@ import codegym.c10.com.model.Type;
 import codegym.c10.com.repository.IComputerRepository;
 import codegym.c10.com.service.IComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,5 +40,15 @@ public class ComputerService implements IComputerService {
     @Override
     public Iterable<Computer> findAllByType(Type type) {
         return computerRepository.findAllByType(type);
+    }
+
+    @Override
+    public Page<Computer> findAll(Pageable pageable) {
+        return computerRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Computer> findAllByNameContaining(Pageable pageable, String name) {
+        return computerRepository.findAllByNameContaining(pageable, name);
     }
 }

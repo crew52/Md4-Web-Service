@@ -3,10 +3,14 @@ package codegym.c10.com.controller;
 import codegym.c10.com.model.Computer;
 import codegym.c10.com.service.IComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,14 +22,28 @@ public class ComputerController {
     @Autowired
     private IComputerService computerService;
 
+//    @GetMapping
+//    public ResponseEntity<Iterable<Computer>> findAllComputer() {
+//        List<Computer> computers = (List<Computer>) computerService.findAll();
+//        if (computers.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(computers, HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<Iterable<Computer>> findAllComputer() {
-        List<Computer> computers = (List<Computer>) computerService.findAll();
-        if (computers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(computers, HttpStatus.OK);
+    public ResponseEntity<Page<Computer>> findAllComputer(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Computer> computers = computerService.findAll(pageable);
+
+        return computers.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(computers);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Computer> findComputerById(@PathVariable Long id) {
@@ -63,4 +81,19 @@ public class ComputerController {
         computerService.remove(id);
         return new ResponseEntity<>(computerOptional.get(), HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Computer>> searchComputers(
+            @RequestParam("search") Optional<String> search,
+            Pageable pageable) {
+
+        Page<Computer> computers = search
+                .map(s -> computerService.findAllByNameContaining(pageable, s))
+                .orElseGet(() -> computerService.findAll(pageable));
+
+        return computers.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(computers);
+    }
+
 }
