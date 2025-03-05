@@ -20,6 +20,8 @@ import java.util.Optional;
 public class TypeController {
     @Autowired
     private ITypeService typeService;
+    @Autowired
+    private IComputerService computerService;
 
     @GetMapping
     public ResponseEntity<Iterable<Type>> findAllType() {
@@ -75,4 +77,20 @@ public class TypeController {
         }
         return new ResponseEntity<>(typeDTOS, HttpStatus.OK);
     }
+
+
+    @GetMapping("/view-type/{id}")
+    public ResponseEntity<?> viewType(@PathVariable("id") Long id) {
+        Optional<Type> typeOptional = typeService.findById(id);
+
+        if (!typeOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Type with ID " + id + " not found");
+        }
+
+        Iterable<Computer> computers = computerService.findAllByType(typeOptional.get());
+
+        return ResponseEntity.ok(computers);
+    }
+
 }

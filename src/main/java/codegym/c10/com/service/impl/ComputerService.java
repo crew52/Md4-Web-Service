@@ -1,6 +1,7 @@
 package codegym.c10.com.service.impl;
 
 import codegym.c10.com.model.Computer;
+import codegym.c10.com.model.Type;
 import codegym.c10.com.repository.IComputerRepository;
 import codegym.c10.com.service.IComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class ComputerService implements IComputerService {
     @Override
     public void remove(Long id) {
         computerRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Computer> findAllByType(Type type) {
+        return computerRepository.findAllByType(type);
     }
 }
