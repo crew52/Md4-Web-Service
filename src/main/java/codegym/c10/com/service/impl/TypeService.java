@@ -20,8 +20,7 @@ public class TypeService implements ITypeService {
 
     @Override
     public Type save(Type type) {
-        typeRepository.save(type);
-        return null;
+        return typeRepository.save(type);
     }
 
     @Override
