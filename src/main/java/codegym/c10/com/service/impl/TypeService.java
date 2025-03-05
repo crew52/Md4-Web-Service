@@ -1,5 +1,6 @@
 package codegym.c10.com.service.impl;
 
+import codegym.c10.com.dto.ITypeDTO;
 import codegym.c10.com.model.Computer;
 import codegym.c10.com.model.Type;
 import codegym.c10.com.repository.ITypeRepository;
@@ -31,6 +32,11 @@ public class TypeService implements ITypeService {
     @Override
     public void remove(Long id) {
         typeRepository.deleteTypeById(id);
+    }
+
+    @Override
+    public Iterable<ITypeDTO> getAllTypes() {
+        return typeRepository.getAllTypes();
     }
 
 }

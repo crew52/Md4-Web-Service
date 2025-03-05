@@ -1,5 +1,6 @@
 package codegym.c10.com.controller;
 
+import codegym.c10.com.dto.ITypeDTO;
 import codegym.c10.com.model.Computer;
 import codegym.c10.com.model.Type;
 import codegym.c10.com.service.IComputerService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,5 +65,14 @@ public class TypeController {
         }
         typeService.remove(id);
         return new ResponseEntity<>(typeOptional.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Iterable<ITypeDTO>> countType() {
+        Iterable<ITypeDTO> typeDTOS = typeService.getAllTypes();
+        if (!typeDTOS.iterator().hasNext()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(typeDTOS, HttpStatus.OK);
     }
 }
