@@ -1,12 +1,9 @@
 package codegym.c10.com.service.impl;
 
 import codegym.c10.com.model.Computer;
-import codegym.c10.com.model.Type;
 import codegym.c10.com.repository.IComputerRepository;
 import codegym.c10.com.service.IComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,8 +19,9 @@ public class ComputerService implements IComputerService {
     }
 
     @Override
-    public void save(Computer computer) {
+    public Computer save(Computer computer) {
         computerRepository.save(computer);
+        return computer;
     }
 
     @Override

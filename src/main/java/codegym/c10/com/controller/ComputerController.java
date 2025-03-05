@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -28,5 +29,42 @@ public class ComputerController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(computers, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Computer> findComputerById(@PathVariable Long id) {
+        Optional<Computer> customerOptional = computerService.findById(id);
+        if (!customerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(customerOptional.get(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Computer> saveComputer(@RequestBody Computer computer) {
+        Computer savedComputer = computerService.save(computer);
+        return savedComputer != null
+                ? ResponseEntity.status(HttpStatus.CREATED).body(savedComputer)
+                : ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Computer> updateComputer(@PathVariable Long id, @RequestBody Computer computer) {
+        Optional<Computer> computerOptional = computerService.findById(id);
+        if (!computerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        computer.setId(computerOptional.get().getId());
+        return new ResponseEntity<>(computerService.save(computer), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Computer> deleteCustomer(@PathVariable Long id) {
+        Optional<Computer> computerOptional = computerService.findById(id);
+        if (!computerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        computerService.remove(id);
+        return new ResponseEntity<>(computerOptional.get(), HttpStatus.OK);
     }
 }

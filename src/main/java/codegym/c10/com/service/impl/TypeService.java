@@ -1,5 +1,6 @@
 package codegym.c10.com.service.impl;
 
+import codegym.c10.com.model.Computer;
 import codegym.c10.com.model.Type;
 import codegym.c10.com.repository.ITypeRepository;
 import codegym.c10.com.service.ITypeService;
@@ -18,8 +19,9 @@ public class TypeService implements ITypeService {
     }
 
     @Override
-    public void save(Type type) {
+    public Type save(Type type) {
         typeRepository.save(type);
+        return null;
     }
 
     @Override
