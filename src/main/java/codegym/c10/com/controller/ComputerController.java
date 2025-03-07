@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping ("/api/computers")
+@CrossOrigin("*")
 public class ComputerController {
     @Autowired
     private IComputerService computerService;
